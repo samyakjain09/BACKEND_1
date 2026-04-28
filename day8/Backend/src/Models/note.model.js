@@ -5,10 +5,7 @@ const noteSchema= new mongoose.Schema({
     description:String
 })
 
-const noteSchema= new mongoose.Schema({
-    title:String,
-    description:String
-})
+
 
 const noteModel=mongoose.model("notes",noteSchema)
 
