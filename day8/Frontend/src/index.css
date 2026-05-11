@@ -30,3 +30,10 @@ html{
   padding-inline: 3rem;
   flex-wrap: wrap;
 }
+
+.note-create-form{
+  display: flex;
+  gap: 1rem;
+  padding-inline: 3rem;
+  padding-block: 1rem;
+}

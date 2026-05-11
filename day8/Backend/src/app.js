@@ -2,6 +2,8 @@ const express=require("express")
 const cors=require("cors")
 const app=express()
 const noteModel=require("./models/note.model")
+const path=require("path")
+app.use(express.static("./public"))
 
 app.use(express.json())
 app.use(cors())
@@ -51,5 +53,11 @@ app.patch("/api/notes/:id",async(req,res)=>{
         message:"note updated successfully"
     })
 })
+
+app.use("*name",(req,res)=>{
+    res.sendFile(path.join(__dirname,"../Public/index.html"))
+})
+
+
 
 module.exports=app
