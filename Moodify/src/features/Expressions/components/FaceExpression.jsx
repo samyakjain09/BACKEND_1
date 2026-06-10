@@ -1,109 +1,91 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  FilesetResolver,
-  FaceLandmarker,
-} from "@mediapipe/tasks-vision";
-    let animationFrameId;
-    
+import { useEffect, useRef, useState } from "react";
+import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
+
 export default function FaceExpression() {
   const videoRef = useRef(null);
-  const faceLandmarkerRef = useRef(null);
+  const landmarkerRef = useRef(null);
+  const animationRef = useRef(null);
+  let stream;
 
-  const [expression, setExpression] = useState("Loading...");
+  const [expression, setExpression] = useState("Detecting...");
 
-  
-    async function initialize() {
-      // Start webcam
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-      });
-
-      videoRef.current.srcObject = stream;
-
-      // Load MediaPipe
+  const init = async () => {
       const vision = await FilesetResolver.forVisionTasks(
-        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm"
+        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
       );
 
-      faceLandmarkerRef.current =
-        await FaceLandmarker.createFromOptions(vision, {
+      landmarkerRef.current = await FaceLandmarker.createFromOptions(
+        vision,
+        {
           baseOptions: {
             modelAssetPath:
               "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/latest/face_landmarker.task",
           },
-          runningMode: "VIDEO",
           outputFaceBlendshapes: true,
+          runningMode: "VIDEO",
           numFaces: 1,
-        });
+        }
+      );
 
-      detectFace();
-    }
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+      });
 
-    function detectExpression(blendshapes) {
-    const getScore = (name) =>
-    blendshapes.find((b) => b.categoryName === name)?.score || 0;
+      videoRef.current.srcObject = stream;
+      await videoRef.current.play();
 
-  const smileLeft = getScore("mouthSmileLeft");
-  const smileRight = getScore("mouthSmileRight");
+      detect();
+    };
 
-  const frownLeft = getScore("mouthFrownLeft");
-  const frownRight = getScore("mouthFrownRight");
+    const detect = () => {
+      if (!landmarkerRef.current || !videoRef.current) return;
 
-  const jawOpen = getScore("jawOpen");
-  const browUp = getScore("browInnerUp");
+      const results = landmarkerRef.current.detectForVideo(
+        videoRef.current,
+        performance.now()
+      );
 
-  // Happy
-  if (smileLeft > 0.5 && smileRight > 0.5) {
-    return "😊 Happy";
-  }
+      if (results.faceBlendshapes?.length > 0) {
+        const blendshapes = results.faceBlendshapes[0].categories;
 
-  // Sad
-  if (frownLeft > 0.001 && frownRight > 0.001) {
-    return "☹️ Sad";
-  }
+        const getScore = (name) =>
+          blendshapes.find((b) => b.categoryName === name)?.score || 0;
 
-  // Surprised
-  if (jawOpen > 0.4 && browUp > 0.4) {
-    return "😲 Surprised";
-  }
+        const smileLeft = getScore("mouthSmileLeft");
+        const smileRight = getScore("mouthSmileRight");
+        const jawOpen = getScore("jawOpen");
+        const browUp = getScore("browInnerUp");
+        const frownLeft = getScore("mouthFrownLeft");
+        const frownRight = getScore("mouthFrownRight");
 
-  // Neutral
-  return "😐 Neutral";
-}
+        let currentExpression = "Neutral 😐";
+
+        if (smileLeft > 0.5 && smileRight > 0.5) {
+          currentExpression = "Happy 😄";
+        } else if (jawOpen > 0.2 && browUp > 0.2) {
+          currentExpression = "Surprised 😲";
+        } else if (frownLeft > 0.0001 && frownRight > 0.0001) {
+          currentExpression = "Sad 😢";
+        }
+
+        setExpression(currentExpression);
+      }
+
+      
+    };
 
   useEffect(() => {
 
-
-    function detectFace() {
-      if (
-        !videoRef.current ||
-        !faceLandmarkerRef.current ||
-        videoRef.current.readyState < 2
-      ) {
-        animationFrameId = requestAnimationFrame(detectFace);
-        return;
-      }
-
-      const results =
-        faceLandmarkerRef.current.detectForVideo(
-          videoRef.current,
-          performance.now()
-        );
-
-      if (results.faceBlendshapes?.length) {
-        const blendshapes =
-          results.faceBlendshapes[0].categories;
-
-        const emotion = detectExpression(blendshapes);
-
-        setExpression(emotion);
-      }
-    }
-
-    initialize();
+    init();
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+
+      if (landmarkerRef.current) {
+        landmarkerRef.current.close();
+      }
 
       if (videoRef.current?.srcObject) {
         videoRef.current.srcObject
@@ -114,17 +96,18 @@ export default function FaceExpression() {
   }, []);
 
   return (
-    <div>
-      <h2>Current Expression: {expression}</h2>
-
+    <div style={{ textAlign: "center" }}>
       <video
         ref={videoRef}
-        autoPlay
+        style={{
+          width: "400px",
+          borderRadius: "12px",
+        }}
         playsInline
-        muted
-        width="640"
-        height="480"
       />
+
+      <h2>{expression}</h2>
+      <button onClick={detect}>Detect Expression</button>
     </div>
   );
 }
