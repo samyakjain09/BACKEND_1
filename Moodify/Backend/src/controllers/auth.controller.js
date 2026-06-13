@@ -46,7 +46,7 @@ async function loginUser(req,res) {
 
     const user=await userModel.findOne({
         $or:[{email},{username}]
-    }).select(+password)
+    }).select("+password")
     if(!user){
         return res.status(400).json({
             message:"Invalid Credentials"
@@ -91,7 +91,7 @@ async function logoutUser(req,res) {
 
     res.clearCookie("token")
 
-    await redis.set(token,Date.now().toString())
+    await redis.set(token,Date.now().toString(),"Ex",60*60)
 
     res.status(200).json({
         message:"logout Successfully    "

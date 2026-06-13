@@ -1,15 +1,10 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { FaceDetector } from '@mediapipe/tasks-vision'
-import FaceExpression from './features/Expressions/components/FaceExpression'
-
+import { RouterProvider } from "react-router"
+import { router } from "./features/auth/pages/app.routes"
+import "./features/shared/styles/global.scss"
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <FaceExpression/>
+    <RouterProvider router={router}/>
   )
 }
 
