@@ -12,3 +12,4 @@ app.get('/courses',(req,res)=>{
 })
 
 app.listen(3000)
+
