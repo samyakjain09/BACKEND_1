@@ -34,8 +34,9 @@ async function uploadSong(req,res){
 
     const song=await songmodel.create({
         type:req.file.mimetype,
+        url:songFile.url,
         title:title,
-        postUrl:posterUrl,
+        posterUrl:posterUrl,
         mood
     })
 
@@ -48,6 +49,13 @@ async function uploadSong(req,res){
 async function getSongs(req,res){
     const {mood}=req.query
     const song=await songmodel.findOne({mood})
+
+    if (!song) {
+        return res.status(404).json({
+            message:"no song found for this mood"
+        })
+    }
+
     res.status(200).json({
         message:"songs fetched successfully",
         song

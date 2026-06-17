@@ -3,10 +3,16 @@ const songSchema = mongoose.Schema({
     type: {
         type: String,
         required: true
-    },postUrl: {
+    },
+    url: {
+        type: String,
+        required: true
+    },
+    posterUrl: {
         type: String,
         default: ""
-    },title:{
+    },
+    title:{
         type:String,
         required:true
     },
