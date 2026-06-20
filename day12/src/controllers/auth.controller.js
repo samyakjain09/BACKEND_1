@@ -1,4 +1,5 @@
-export async function RegisterUser(req,res) {
-    throw new Error("encounter an error while registering new user");
-    
+export async function RegisterUser(req,res,next) {
+    res.status(201).json({
+        message:"user Registerred Successfully"
+    })
 }
