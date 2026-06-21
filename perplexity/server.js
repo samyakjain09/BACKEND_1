@@ -1,6 +1,10 @@
 import app from "./src/app.js"
 import "dotenv/config"
 import connectToDb from "./src/config/database.js"
+import { testAi } from "./src/services/ai.services.js";
+
+testAi();
+
 
 connectToDb()
             .catch((err)=>{

@@ -1,44 +1,25 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const messageSchema = new mongoose.Schema(
-  {
-    chat: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Chat",
-      required: true,
+    {
+        chat: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Chat',
+            required: true,
+        },
+        content: {
+            type: String,
+            required: true,
+        },
+        role: {
+            type: String,
+            enum: [ 'user', 'ai' ],
+            required: true,
+        },
     },
-    sender: {
-      type: String,
-      enum: ["user", "assistant", "system"],
-      default: "user",
-    },
-    role: {
-      type: String,
-      enum: ["user", "assistant", "system"],
-      default: "user",
-    },
-    content: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    tokens: {
-      type: Number,
-      default: 0,
-    },
-    embedding: {
-      type: [Number],
-      default: [],
-    },
-    metadata: {
-      type: Object,
-      default: {},
-    },
-  },
-  {
-    timestamps: true,
-  }
-)
+    { timestamps: true }
+);
 
-const Message = mongoose.model("Message", messageSchema)
-export default Message
+const messageModel = mongoose.model('Message', messageSchema);
+
+export default messageModel;
