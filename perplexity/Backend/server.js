@@ -1,10 +1,12 @@
 import app from "./src/app.js"
 import "dotenv/config"
 import connectToDb from "./src/config/database.js"
-import { testAi } from "./src/services/ai.services.js";
+import http from "http"
+import { initSocket } from "./src/sockets/server.socket.js"
 
-testAi();
+const httpServer=http.createServer(app)
 
+initSocket(httpServer)
 
 connectToDb()
             .catch((err)=>{
@@ -12,6 +14,6 @@ connectToDb()
                 process.exit(1)
             })
 
-app.listen(3000,()=>{
+httpServer.listen(3000,()=>{
     console.log("server is running on port 3000")
 })

@@ -14,11 +14,3 @@ const model = new ChatMistralAI({
     apiKey:process.env.MISTRAL_API_KEY
 })
 
-export async function testAi() {
-  try {
-    const response = await model.invoke("what is the capital of france?");
-    console.log("AI Answer:", response.content);
-  } catch (error) {
-    console.log("AI Error:", error);
-  }
-}
