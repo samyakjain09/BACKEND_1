@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { useSelector } from 'react-redux'
-import { useChat } from '../hooks/useChat.js'
+import { useChat } from '../hooks/useChat'
 import remarkGfm from 'remark-gfm'
 
 
