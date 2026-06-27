@@ -34,22 +34,32 @@ export async function register(req, res) {
         email: user.email,
     }, process.env.JWT_SECRET)
 
-    await sendEmail({
-        to: email,
-        subject: "Welcome to Perplexity!",
-        html: `
-                <p>Hi ${username},</p>
-                <p>Thank you for registering at <strong>Perplexity</strong>. We're excited to have you on board!</p>
-                <p>Please verify your email address by clicking the link below:</p>
-                <a href="${serverUrl}/api/auth/verify-email?token=${emailVerificationToken}">Verify Email</a>
-                <p>If you did not create an account, please ignore this email.</p>
-                <p>Best regards,<br>The Perplexity Team</p>
-        `
-    })
+    let verificationEmailSent = true;
+
+    try {
+        await sendEmail({
+            to: email,
+            subject: "Welcome to Perplexity!",
+            html: `
+                    <p>Hi ${username},</p>
+                    <p>Thank you for registering at <strong>Perplexity</strong>. We're excited to have you on board!</p>
+                    <p>Please verify your email address by clicking the link below:</p>
+                    <a href="${serverUrl}/api/auth/verify-email?token=${emailVerificationToken}">Verify Email</a>
+                    <p>If you did not create an account, please ignore this email.</p>
+                    <p>Best regards,<br>The Perplexity Team</p>
+            `
+        })
+    } catch (error) {
+        verificationEmailSent = false;
+        console.error("Verification email could not be sent:", error);
+    }
 
     res.status(201).json({
-        message: "User registered successfully",
+        message: verificationEmailSent
+            ? "User registered successfully"
+            : "User registered successfully, but the verification email could not be sent",
         success: true,
+        verificationEmailSent,
         user: {
             id: user._id,
             username: user.username,

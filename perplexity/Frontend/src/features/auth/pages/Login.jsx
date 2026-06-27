@@ -11,6 +11,7 @@ const Login = () => {
 
     const user = useSelector(state => state.auth.user)
     const loading = useSelector(state => state.auth.loading)
+    const error = useSelector(state => state.auth.error)
 
     const { handleLogin } = useAuth()
 
@@ -24,8 +25,11 @@ const Login = () => {
             password,
         }
 
-        await handleLogin(payload)
-        navigate("/")
+        const result = await handleLogin(payload)
+
+        if (result?.success) {
+            navigate("/")
+        }
 
     }
 
@@ -43,6 +47,12 @@ const Login = () => {
                     <p className="mt-2 text-sm text-zinc-300">
                         Sign in with your email and password.
                     </p>
+
+                    {error ? (
+                        <div className="mt-4 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                            {error}
+                        </div>
+                    ) : null}
 
                     <form onSubmit={submitForm} className="mt-8 space-y-5">
                         <div>
@@ -77,9 +87,10 @@ const Login = () => {
 
                         <button
                             type="submit"
+                            disabled={loading}
                             className="w-full rounded-lg bg-[#31b8c6] px-4 py-3 font-semibold text-zinc-950 transition hover:bg-[#45c7d4] focus:outline-none focus:shadow-[0_0_0_3px_rgba(49,184,198,0.35)]"
                         >
-                            Login
+                            {loading ? "Logging in..." : "Login"}
                         </button>
                     </form>
 
