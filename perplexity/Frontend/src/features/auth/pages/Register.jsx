@@ -1,19 +1,12 @@
 import React, { useState } from 'react'
-import { Link, useNavigate, Navigate } from 'react-router'
-import { useAuth } from '../hook/useAuth'
-import { useSelector } from 'react-redux'
+import { Link } from 'react-router'
 
 const Register = () => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const { handleRegister } = useAuth()
-  const navigate = useNavigate()
-  const loading = useSelector((state) => state.auth.loading)
-  const error = useSelector((state) => state.auth.error)
-  const user = useSelector((state) => state.auth.user)
 
-  const submitForm = async (event) => {
+  const submitForm = (event) => {
     event.preventDefault()
 
     const payload = {
@@ -22,15 +15,7 @@ const Register = () => {
       password,
     }
 
-    const result = await handleRegister(payload)
-
-    if (result?.success) {
-      navigate('/login')
-    }
-  }
-
-  if (!loading && user) {
-    return <Navigate to="/" replace />
+    console.log('Register payload:', payload)
   }
 
   return (
@@ -43,12 +28,6 @@ const Register = () => {
           <p className="mt-2 text-sm text-zinc-300">
             Register with your username, email, and password.
           </p>
-
-          {error ? (
-            <div className="mt-4 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
-              {error}
-            </div>
-          ) : null}
 
           <form onSubmit={submitForm} className="mt-8 space-y-5">
             <div>
@@ -98,10 +77,9 @@ const Register = () => {
 
             <button
               type="submit"
-              disabled={loading}
               className="w-full rounded-lg bg-[#31b8c6] px-4 py-3 font-semibold text-zinc-950 transition hover:bg-[#45c7d4] focus:outline-none focus:shadow-[0_0_0_3px_rgba(49,184,198,0.35)]"
             >
-              {loading ? 'Registering...' : 'Register'}
+              Register
             </button>
           </form>
 
