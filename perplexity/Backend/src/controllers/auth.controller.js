@@ -54,12 +54,12 @@ export async function register(req, res) {
    
     sendEmail({
         to: email,
-        subject: "welcome to Neurixai",
+        subject: "welcome to Perplexity",
         html: `
             <p>Hi ${username},</p>
-            <p>Thank you for registering at <strong>Neurixa-AI</strong>.</p>
+            <p>Thank you for registering at <strong>Perplexity</strong>.</p>
             <a href="${process.env.BACKEND_URL || 'http://localhost:3000'}/api/auth/verify-email?token=${emailVerificationToken}">Verify Email</a>
-            <p>Best regards,<br/>The Neurixa-AI Team</p>`
+            <p>Best regards,<br/>The Perplexity Team</p>`
     }).catch(err => console.error("Email sending failed:", err.message));
 
     console.log("REGISTRATION SUCCESS: Created user ID:", user._id.toString());
@@ -254,7 +254,7 @@ export async function resendVerificationEmail(req, res) {
 
         await sendEmail({
             to: user.email,
-            subject: "Resend Email Verification - NeurixaAI",
+            subject: "Resend Email Verification - Perplexity",
             html: `
             <p>Hi ${user.username},</p>
 
@@ -268,7 +268,7 @@ export async function resendVerificationEmail(req, res) {
 
             <p>If you did not request this email, please ignore it.</p>
 
-            <p>Thanks,<br/>NeurixaAI Team</p>
+            <p>Thanks,<br/>Perplexity Team</p>
             `
         })
 
