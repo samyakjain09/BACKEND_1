@@ -18,8 +18,9 @@ app.use("/api/songs",songRoutes)
 
 app.use(express.static(path.join(__dirname, "../../Frontend/dist")));
 
-app.get("*", (req, res, next) => {
+app.get(/.*/, (req, res, next) => {
   if (req.path.startsWith("/api/")) return next();
+
   res.sendFile(path.join(__dirname, "../../Frontend/dist/index.html"));
 });
 
