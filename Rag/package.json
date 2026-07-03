@@ -10,5 +10,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "module",
+  "dependencies": {
+    "@langchain/core": "^1.2.1",
+    "@langchain/textsplitters": "^1.0.1",
+    "pdf-parse": "^2.4.5"
+  }
 }
