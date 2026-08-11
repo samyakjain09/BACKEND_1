@@ -1,6 +1,6 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const a = 3;
 const b = "samyak";
-console.log(a - b);
-//# sourceMappingURL=index.js.map
+const c = "Hello World";
+const d = [32, 45, 56732];
+console.log(d);
