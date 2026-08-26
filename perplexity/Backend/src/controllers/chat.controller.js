@@ -50,7 +50,8 @@ export async function sendMessage(req, res) {
         userMessage,
         aiMessage,
     })
-}
+
+ }
 
 export async function getChats(req, res) {
     const user = req.user

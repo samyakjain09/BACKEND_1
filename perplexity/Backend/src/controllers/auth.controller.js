@@ -10,6 +10,7 @@ import { sendEmail } from "../services/mail.services.js";
  * @body { username, email, password }
  */
 
+
 export async function register(req, res) {
     const { username, email, password } = req.body;
 
@@ -137,15 +138,11 @@ export async function login(req, res) {
     });
 }
 
-
-
 /**
  * @desc Get current logged in user's details
  * @route GET /api/auth/get-me
  * @access Private
  */
-
-
 
 export async function getMe(req, res) {
     try {
